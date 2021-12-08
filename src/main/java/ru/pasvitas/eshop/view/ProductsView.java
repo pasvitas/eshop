@@ -49,7 +49,7 @@ public class ProductsView extends VerticalLayout {
 
         productGrid
                 .addColumn(Product::getCategoryName)
-                .setHeader("Идентификатор");
+                .setHeader("Категория");
 
         productGrid
                 .addColumn(Product::getDesc)

@@ -38,7 +38,7 @@ public class AdminView extends VerticalLayout implements UpdateFromFormListener 
 
         productGrid
                 .addColumn(Product::getCategoryName)
-                .setHeader("Идентификатор");
+                .setHeader("Категория");
 
         productGrid
                 .addColumn(Product::getDesc)
