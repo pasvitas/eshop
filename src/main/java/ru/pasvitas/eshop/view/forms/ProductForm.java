@@ -1,10 +1,12 @@
-package ru.pasvitas.eshop.view;
+package ru.pasvitas.eshop.view.forms;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import java.math.BigDecimal;
@@ -19,7 +21,7 @@ public class ProductForm extends FormLayout {
     private final UpdateFromFormListener updateListener;
 
     private final TextField name = new TextField("Название товара");
-    private final TextField description = new TextField("Описание товара");
+    private final TextArea description = new TextArea("Описание товара");
     private final TextField price = new TextField("Цена");
     private final ComboBox<String> category = new ComboBox<>("Категория");
 
@@ -75,6 +77,7 @@ public class ProductForm extends FormLayout {
                     product.getDescription(),
                     BigDecimal.valueOf(Double.parseDouble(product.getPrice()))
             );
+            Notification.show("Добавлено!", 5000, Notification.Position.BOTTOM_END);
         }
         else {
             productService.editProduct(
@@ -84,16 +87,20 @@ public class ProductForm extends FormLayout {
                     product.getDescription(),
                     BigDecimal.valueOf(Double.parseDouble(product.getPrice()))
             );
+            Notification.show("Изменено!", 5000, Notification.Position.BOTTOM_END);
         }
         updateListener.updateData();
+        setInitialProduct(null);
     }
 
     private void deleteProduct() {
         ProductBinderModel product = productBinder.getBean();
         if (product.getId() != null) {
             productService.deleteProduct(product.getId(), product.getCategory());
+            Notification.show("Удалено!", 5000, Notification.Position.BOTTOM_END);
         }
         updateListener.updateData();
+        setInitialProduct(null);
     }
 
 }

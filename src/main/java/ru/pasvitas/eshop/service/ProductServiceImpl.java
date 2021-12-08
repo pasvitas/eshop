@@ -9,7 +9,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.pasvitas.eshop.model.Product;
 import ru.pasvitas.eshop.repository.ProductRepository;
@@ -34,10 +33,15 @@ public class ProductServiceImpl implements ProductService {
         return categories;
     }
 
-    @Cacheable(value = "productsFromCategory", key = "#category")
+    @Cacheable(value = "productsFromCategory", key = "{#category, #page, #size}")
     @Override
-    public List<Product> getAllProductsForCategory(String category) {
-        return productRepository.getAllByCategoryName(category);
+    public List<Product> getAllProductsForCategory(String category, int page, int size) {
+        return productRepository.findAllByCategoryName(category, PageRequest.of(page, size)).getContent();
+    }
+
+    @Override
+    public long countAllProductsForCategoryName(String category) {
+        return productRepository.countAllByCategoryName(category);
     }
 
     @Cacheable(value = "products", key = "#id")
@@ -91,7 +95,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public int getProductsCount() {
-        return (int) productRepository.count();
+    public long getProductsCount() {
+        return productRepository.count();
     }
 }

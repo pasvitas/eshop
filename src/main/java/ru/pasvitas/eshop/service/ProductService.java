@@ -8,7 +8,8 @@ import ru.pasvitas.eshop.model.Product;
 public interface ProductService {
 
     List<String> getCategories();
-    List<Product> getAllProductsForCategory(String category);
+    List<Product> getAllProductsForCategory(String category, int page, int size);
+    long countAllProductsForCategoryName(String category);
 
     Optional<Product> getProduct(String id);
 
@@ -17,5 +18,5 @@ public interface ProductService {
     void deleteProduct(String productId, String category);
 
     List<Product> getProducts(int page, int limit);
-    int getProductsCount();
+    long getProductsCount();
 }
