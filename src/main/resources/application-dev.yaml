@@ -1,0 +1,15 @@
+logging:
+  level:
+    ru.pasvitas.eshop: DEBUG
+
+spring:
+  data:
+    mongodb:
+      host: localhost
+      #      password:
+      port: 27017
+      database: ehop
+  security:
+    user:
+      name: user
+      password: user

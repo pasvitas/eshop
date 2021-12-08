@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.pasvitas.eshop.model.Product;
 import ru.pasvitas.eshop.repository.ProductRepository;
@@ -81,5 +83,15 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(String productId, String category) {
         productRepository.deleteById(productId);
+    }
+
+    @Override
+    public List<Product> getProducts(int page, int limit) {
+        return productRepository.findAll(PageRequest.of(page, limit)).getContent();
+    }
+
+    @Override
+    public int getProductsCount() {
+        return (int) productRepository.count();
     }
 }

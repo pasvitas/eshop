@@ -15,4 +15,7 @@ public interface ProductService {
     void addProduct(String category, String productName, String description, BigDecimal price);
     void editProduct(String productId, String category, String productName, String description, BigDecimal price);
     void deleteProduct(String productId, String category);
+
+    List<Product> getProducts(int page, int limit);
+    int getProductsCount();
 }
