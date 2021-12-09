@@ -30,12 +30,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void createUser(String username, String password) throws UserAlreadyCreatedException {
+    public void createUser(String username, String password, String email) throws UserAlreadyCreatedException {
         Optional<User> userOptional = userRepository.getUserByUsername(username);
         if (userOptional.isEmpty()) {
             User user = User.builder()
                     .username(username)
                     .password(password)
+                    .email(email)
                     .roles(List.of(UserRole.USER.getDbName()))
                     .cartProductIds(List.of())
                     .orders(List.of())

@@ -4,5 +4,5 @@ import ru.pasvitas.eshop.exceptions.UserAlreadyCreatedException;
 
 public interface UserService {
 
-    void createUser(String username, String password) throws UserAlreadyCreatedException;
+    void createUser(String username, String password, String email) throws UserAlreadyCreatedException;
 }

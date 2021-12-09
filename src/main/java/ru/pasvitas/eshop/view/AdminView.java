@@ -3,10 +3,12 @@ package ru.pasvitas.eshop.view;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -19,8 +21,10 @@ import ru.pasvitas.eshop.view.bindermodel.ProductBinderModel;
 import ru.pasvitas.eshop.view.callbacks.UpdateFromFormListener;
 import ru.pasvitas.eshop.view.forms.ProductForm;
 
+@Route("/admin")
 @UIScope
 @SpringComponent
+@PageTitle("ESHOP | ADMIN")
 public class AdminView extends VerticalLayout implements UpdateFromFormListener {
 
     private final ProductService productService;
@@ -93,7 +97,8 @@ public class AdminView extends VerticalLayout implements UpdateFromFormListener 
             if (!textField.getValue().isEmpty()) {
                 productForm.addNewCategory(textField.getValue());
                 textField.setValue("");
-                Notification.show("Категория добавлена", 5000, Notification.Position.BOTTOM_END);
+                Notification.show("Категория добавлена", 5000, Notification.Position.BOTTOM_END)
+                        .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             }
         });
 

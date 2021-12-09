@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
@@ -77,7 +78,8 @@ public class ProductForm extends FormLayout {
                     product.getDescription(),
                     BigDecimal.valueOf(Double.parseDouble(product.getPrice()))
             );
-            Notification.show("Добавлено!", 5000, Notification.Position.BOTTOM_END);
+            Notification.show("Добавлено!", 5000, Notification.Position.BOTTOM_END)
+                    .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         }
         else {
             productService.editProduct(
@@ -87,7 +89,8 @@ public class ProductForm extends FormLayout {
                     product.getDescription(),
                     BigDecimal.valueOf(Double.parseDouble(product.getPrice()))
             );
-            Notification.show("Изменено!", 5000, Notification.Position.BOTTOM_END);
+            Notification.show("Изменено!", 5000, Notification.Position.BOTTOM_END)
+                    .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         }
         updateListener.updateData();
         setInitialProduct(null);
@@ -97,7 +100,8 @@ public class ProductForm extends FormLayout {
         ProductBinderModel product = productBinder.getBean();
         if (product.getId() != null) {
             productService.deleteProduct(product.getId(), product.getCategory());
-            Notification.show("Удалено!", 5000, Notification.Position.BOTTOM_END);
+            Notification.show("Удалено!", 5000, Notification.Position.BOTTOM_END)
+                    .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         }
         updateListener.updateData();
         setInitialProduct(null);

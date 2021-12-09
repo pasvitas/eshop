@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.pasvitas.eshop.config.security.SecurityUtils;
 
 @Configuration
 @EnableWebSecurity
@@ -19,9 +20,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/admin").hasRole("ADMIN")
+                .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
                 .anyRequest().permitAll()
                 .and()
-                .formLogin();
+                .formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .failureForwardUrl("/login?error")
+                .successForwardUrl("/")
+                .and().logout().logoutSuccessUrl("/");
     }
 
     @Bean
