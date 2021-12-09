@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  ingressClassName: public
+  tls:
+    - hosts:
+        - server.pasvitas.online
+      secretName: tls-secret
+  rules:
+    - host: server.pasvitas.online
+      http:
+        paths:
+          - backend:
+              serviceName: {{ .Chart.Name }}
+              servicePort: 8090
+            path: /{{ .Release.Namespace }}/eshop(/|$)(.*)
+            pathType: Prefix
