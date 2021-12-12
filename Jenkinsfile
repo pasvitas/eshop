@@ -119,6 +119,7 @@ spec:
                 build job: './../Deploy', parameters: [
                         [$class: 'StringParameterValue', name: 'GIT_REPO', value: 'eshop'],
                         [$class: 'StringParameterValue', name: 'GIT_REPO_GROUP', value: 'pasvitas'],
+                        [$class: 'StringParameterValue', name: 'PROJECT', value: 'eshop'],
                         [$class: 'StringParameterValue', name: 'VERSION', value: revision],
                         [$class: 'StringParameterValue', name: 'ENV', value: branch == 'master' ? 'staging' : 'test']
                 ], wait: false
