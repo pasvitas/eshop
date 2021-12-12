@@ -1,5 +1,7 @@
 package ru.pasvitas.eshop.service;
 
+import io.reactivex.rxjava3.subjects.PublishSubject;
+import io.reactivex.rxjava3.subjects.Subject;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +13,8 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.pasvitas.eshop.model.Product;
+import ru.pasvitas.eshop.model.UpdateEvent;
+import ru.pasvitas.eshop.model.UpdateType;
 import ru.pasvitas.eshop.repository.ProductRepository;
 
 @RequiredArgsConstructor
@@ -18,6 +22,8 @@ import ru.pasvitas.eshop.repository.ProductRepository;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+
+    private final Subject<UpdateEvent<Product>> updateEventsSubject = PublishSubject.create();
 
     @Cacheable("categories")
     @Override
@@ -61,6 +67,7 @@ public class ProductServiceImpl implements ProductService {
                 .desc(description)
                 .price(price)
                 .build();
+        postUpdate();
         productRepository.save(product);
     }
 
@@ -77,6 +84,7 @@ public class ProductServiceImpl implements ProductService {
                 .desc(description)
                 .price(price)
                 .build();
+        postUpdate();
         productRepository.save(product);
     }
 
@@ -87,6 +95,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(String productId, String category) {
         productRepository.deleteById(productId);
+        postUpdate();
     }
 
     @Override
@@ -97,5 +106,15 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public long getProductsCount() {
         return productRepository.count();
+    }
+
+
+    @Override
+    public Subject<UpdateEvent<Product>> getProductUpdates() {
+        return updateEventsSubject;
+    }
+
+    private void postUpdate() {
+        updateEventsSubject.onNext(new UpdateEvent<>(null, UpdateType.RELOAD_ALL));
     }
 }

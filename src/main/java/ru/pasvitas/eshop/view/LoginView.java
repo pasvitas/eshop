@@ -7,9 +7,10 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import ru.pasvitas.eshop.view.components.BackToMainButton;
 
 @Route("/login")
-@PageTitle("Login | ESHOP")
+@PageTitle("ESHOP | Login")
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
     private final LoginForm login = new LoginForm();
@@ -21,8 +22,9 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
         setJustifyContentMode(JustifyContentMode.CENTER);
 
         login.setAction("login");
+        login.setForgotPasswordButtonVisible(false);
 
-        add(new H1("EShop | Вход"), login);
+        add(new BackToMainButton(), new H1("EShop | Вход"), login);
     }
 
     @Override

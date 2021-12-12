@@ -26,9 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .loginProcessingUrl("/login")
                 .failureForwardUrl("/login?error")
-                .successForwardUrl("/")
                 .and().logout().logoutSuccessUrl("/");
     }
 

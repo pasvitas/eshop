@@ -2,6 +2,7 @@ package ru.pasvitas.eshop.model;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -29,7 +30,7 @@ public class User implements UserDetails {
 
     private List<Order> orders;
 
-    private List<String> cartProductIds;
+    private Map<String, Integer> cartProductIds;
 
     private List<String> roles;
 

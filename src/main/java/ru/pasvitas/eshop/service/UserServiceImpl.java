@@ -1,6 +1,7 @@
 package ru.pasvitas.eshop.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,7 +39,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     .password(password)
                     .email(email)
                     .roles(List.of(UserRole.USER.getDbName()))
-                    .cartProductIds(List.of())
+                    .cartProductIds(Map.of())
                     .orders(List.of())
                     .build();
             userRepository.save(user);

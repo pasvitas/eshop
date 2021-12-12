@@ -1,4 +1,4 @@
-package ru.pasvitas.eshop.view;
+package ru.pasvitas.eshop.view.components;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
@@ -7,6 +7,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.spring.annotation.UIScope;
 import ru.pasvitas.eshop.model.Product;
+import ru.pasvitas.eshop.service.CartService;
 
 @UIScope
 public class ProductInfoView extends VerticalLayout {
@@ -15,14 +16,27 @@ public class ProductInfoView extends VerticalLayout {
     private final Span descriptionText = new Span("Описание");
     private final Span priceText = new Span("Цена");
 
+    private Product product = null;
 
-    public ProductInfoView() {
-        Button button = new Button("Добавить в корзину");
-        button.addClickListener(click -> Notification.show("Типа добавлено, но нет", 5000, Notification.Position.BOTTOM_END));
-        add(titleText, descriptionText, priceText, button);
+    public ProductInfoView(String userName, CartService cartService) {
+        add(titleText, descriptionText, priceText);
+        if (userName != null) {
+            Button button = new Button("Добавить в корзину");
+            button.addClickListener(click -> {
+                if (product != null) {
+                    cartService.addToCart(userName, product.getId());
+                    Notification.show("Добавлено", 3000, Notification.Position.BOTTOM_END);
+                }
+            });
+            add(button);
+        }
+        else {
+            add(new Span("Для добавления в корзину войдите в аккаунт"));
+        }
     }
 
     public void setProduct(Product product) {
+        this.product = product;
         if (product == null) {
             setVisible(false);
         }

@@ -71,7 +71,7 @@ public class RegistrationForm extends FormLayout {
             RegistrationBinderModel model = binder.getBean();
             try {
                 userService.createUser(model.getUsername(), model.getPassword(), model.getEmail());
-                Notification successNotification =  Notification.show("Успешно зарегистрировались!", 5000, Notification.Position.BOTTOM_END);
+                Notification successNotification =  Notification.show("Успешно зарегистрировались!", 3000, Notification.Position.BOTTOM_END);
                 successNotification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 successNotification.addDetachListener(event -> UI.getCurrent().navigate("/login"));
                 button.setEnabled(false);

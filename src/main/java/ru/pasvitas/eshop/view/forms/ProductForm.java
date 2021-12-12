@@ -14,12 +14,10 @@ import java.math.BigDecimal;
 import java.util.List;
 import ru.pasvitas.eshop.service.ProductService;
 import ru.pasvitas.eshop.view.bindermodel.ProductBinderModel;
-import ru.pasvitas.eshop.view.callbacks.UpdateFromFormListener;
 
 public class ProductForm extends FormLayout {
 
     private final ProductService productService;
-    private final UpdateFromFormListener updateListener;
 
     private final TextField name = new TextField("Название товара");
     private final TextArea description = new TextArea("Описание товара");
@@ -31,9 +29,8 @@ public class ProductForm extends FormLayout {
 
     private final Binder<ProductBinderModel> productBinder = new Binder<>(ProductBinderModel.class);
 
-    public ProductForm(ProductService productService, UpdateFromFormListener updateFromFormListener) {
+    public ProductForm(ProductService productService) {
         this.productService = productService;
-        this.updateListener = updateFromFormListener;
         category.setItems(productService.getCategories());
 
         HorizontalLayout buttons = new HorizontalLayout(saveButton, deleteButton);
@@ -92,7 +89,6 @@ public class ProductForm extends FormLayout {
             Notification.show("Изменено!", 5000, Notification.Position.BOTTOM_END)
                     .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         }
-        updateListener.updateData();
         setInitialProduct(null);
     }
 
@@ -103,7 +99,6 @@ public class ProductForm extends FormLayout {
             Notification.show("Удалено!", 5000, Notification.Position.BOTTOM_END)
                     .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         }
-        updateListener.updateData();
         setInitialProduct(null);
     }
 

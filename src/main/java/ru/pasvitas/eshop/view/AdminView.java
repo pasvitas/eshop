@@ -1,5 +1,9 @@
 package ru.pasvitas.eshop.view;
 
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
@@ -12,30 +16,30 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import java.time.Duration;
+import io.reactivex.rxjava3.disposables.Disposable;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.pasvitas.eshop.model.Product;
 import ru.pasvitas.eshop.service.ProductService;
 import ru.pasvitas.eshop.view.bindermodel.ProductBinderModel;
-import ru.pasvitas.eshop.view.callbacks.UpdateFromFormListener;
+import ru.pasvitas.eshop.view.components.BackToMainButton;
 import ru.pasvitas.eshop.view.forms.ProductForm;
 
 @Route("/admin")
 @UIScope
 @SpringComponent
-@PageTitle("ESHOP | ADMIN")
-public class AdminView extends VerticalLayout implements UpdateFromFormListener {
+@PageTitle("ESHOP | Admin")
+public class AdminView extends AppLayout {
 
-    private final ProductService productService;
-    private final ProductsView productsView; //Хреновая стратегия тащить одну вью в другую
     private final Grid<Product> productGrid = new Grid<>();
 
-    @Autowired
-    public AdminView(ProductService productService, ProductsView productsView) {
-        this.productService = productService;
-        this.productsView = productsView;
+    private Disposable subscriber;
 
+    private final ProductService productService;
+
+    @Autowired
+    public AdminView(ProductService productService) {
+        this.productService = productService;
         productGrid
                 .addColumn(Product::getId)
                 .setHeader("Идентификатор");
@@ -57,14 +61,14 @@ public class AdminView extends VerticalLayout implements UpdateFromFormListener 
                     int offset = query.getOffset();
                     int limit = query.getLimit();
 
-                    List<Product> persons = productService.getProducts(offset, limit);
+                    List<Product> persons = this.productService.getProducts(offset, limit);
 
                     return persons.stream();
                 },
-                count -> (int) productService.getProductsCount()
+                count -> (int) this.productService.getProductsCount()
         ));
 
-        ProductForm productForm = new ProductForm(this.productService, this);
+        ProductForm productForm = new ProductForm(this.productService);
 
         productGrid.asSingleSelect().addValueChangeListener(event -> {
             if (event.getValue() == null) {
@@ -78,7 +82,6 @@ public class AdminView extends VerticalLayout implements UpdateFromFormListener 
 
 
         HorizontalLayout horizontalLayout = new HorizontalLayout(productGrid, productForm);
-        setSizeFull();
         productGrid.setSizeFull();
         horizontalLayout.setSizeFull();
 
@@ -103,12 +106,28 @@ public class AdminView extends VerticalLayout implements UpdateFromFormListener 
         });
 
         HorizontalLayout horizontalLayoutButtonAdd = new HorizontalLayout(addProductButton, textField, addCategoryButton);
-        add(horizontalLayoutButtonAdd, horizontalLayout);
+        VerticalLayout verticalLayout = new VerticalLayout(horizontalLayoutButtonAdd, horizontalLayout);
+        verticalLayout.setSizeFull();
+        setContent(verticalLayout);
+
+        addToNavbar(new BackToMainButton());
+
+    }
+
+    private void updateGrid() {
+        UI.getCurrent().access(() -> productGrid.getDataProvider().refreshAll());
     }
 
     @Override
-    public void updateData() {
-        productGrid.getDataProvider().refreshAll();
-        productsView.refreshGrids();
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        subscriber = productService.getProductUpdates()
+                .subscribe(event -> updateGrid());
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        super.onDetach(detachEvent);
+        subscriber.dispose();
     }
 }

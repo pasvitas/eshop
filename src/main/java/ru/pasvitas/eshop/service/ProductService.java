@@ -1,9 +1,12 @@
 package ru.pasvitas.eshop.service;
 
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.subjects.Subject;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import ru.pasvitas.eshop.model.Product;
+import ru.pasvitas.eshop.model.UpdateEvent;
 
 public interface ProductService {
 
@@ -19,4 +22,6 @@ public interface ProductService {
 
     List<Product> getProducts(int page, int limit);
     long getProductsCount();
+
+    Subject<UpdateEvent<Product>> getProductUpdates();
 }
