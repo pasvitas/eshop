@@ -9,13 +9,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.pasvitas.eshop.exceptions.UserAlreadyCreatedException;
+import ru.pasvitas.eshop.model.Order;
 import ru.pasvitas.eshop.model.User;
 import ru.pasvitas.eshop.model.UserRole;
 import ru.pasvitas.eshop.repository.UserRepository;
 
 @RequiredArgsConstructor
 @Service
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService, UserDetailsService, ProfileService {
 
     private final UserRepository userRepository;
 
@@ -47,5 +48,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         else {
             throw new UserAlreadyCreatedException(username);
         }
+    }
+
+    @Override
+    public List<Order> getOrders(String username) {
+        Optional<User> userOptional = userRepository.getUserByUsername(username);
+        return userOptional.map(User::getOrders).orElse(List.of());
     }
 }

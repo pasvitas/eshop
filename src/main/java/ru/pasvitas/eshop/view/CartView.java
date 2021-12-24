@@ -18,13 +18,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import ru.pasvitas.eshop.config.security.SecurityChecker;
 import ru.pasvitas.eshop.model.OrderItem;
 import ru.pasvitas.eshop.service.CartService;
-import ru.pasvitas.eshop.view.components.OrderItemInfoView;
+import ru.pasvitas.eshop.view.components.InCartItemView;
 
 @UIScope
 @SpringComponent
 public class CartView extends VerticalLayout {
 
-    private OrderItemInfoView orderItemInfoView;
+    private InCartItemView orderItemInfoView;
 
     private final CartService cartService;
 
@@ -60,7 +60,7 @@ public class CartView extends VerticalLayout {
 
             updateGrid();
 
-            orderItemInfoView = new OrderItemInfoView(cartService, user.getUsername());
+            orderItemInfoView = new InCartItemView(cartService, user.getUsername());
             orderItemInfoView.setOrderItem(null);
             cartGrid.asSingleSelect().addValueChangeListener(
                     event -> orderItemInfoView.setOrderItem(event.getValue())
@@ -71,8 +71,8 @@ public class CartView extends VerticalLayout {
             Button buttonMakeOrder = new Button("Сделать заказ", e -> {
                 Notification.show("Заказ сделан!", 5000, Notification.Position.BOTTOM_END)
                                 .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-                textArea.clear();
                 cartService.convertToOrder(user.getUsername(), textArea.getValue());
+                textArea.clear();
             });
 
             HorizontalLayout horizontalLayout = new HorizontalLayout(cartGrid, orderItemInfoView);

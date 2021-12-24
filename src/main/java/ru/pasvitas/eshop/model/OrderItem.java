@@ -1,5 +1,7 @@
 package ru.pasvitas.eshop.model;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +17,11 @@ public class OrderItem {
 
     private String title;
 
-    private String price;
+    private BigDecimal price;
 
     private int amount;
+
+    public BigDecimal getCost() {
+        return price.multiply(BigDecimal.valueOf(amount));
+    }
 }

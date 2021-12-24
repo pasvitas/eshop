@@ -81,9 +81,9 @@ public class ProductsView extends VerticalLayout {
                     int offset = query.getOffset();
                     int limit = query.getLimit();
 
-                    List<Product> persons = productService.getAllProductsForCategory(category, offset, limit);
+                    List<Product> products = productService.getAllProductsForCategory(category, offset, limit);
 
-                    return persons.stream();
+                    return products.stream();
                 },
                 count -> (int) productService.countAllProductsForCategoryName(category)
         ));

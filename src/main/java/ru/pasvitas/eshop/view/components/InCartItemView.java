@@ -10,7 +10,7 @@ import ru.pasvitas.eshop.model.OrderItem;
 import ru.pasvitas.eshop.service.CartService;
 
 @UIScope
-public class OrderItemInfoView extends VerticalLayout {
+public class InCartItemView extends VerticalLayout {
 
     private final H2 titleText = new H2();
     private final Span amount = new Span("Количество");
@@ -20,7 +20,7 @@ public class OrderItemInfoView extends VerticalLayout {
 
     private OrderItem orderItem = null;
 
-    public OrderItemInfoView(CartService cartService, String userName) {
+    public InCartItemView(CartService cartService, String userName) {
         this.cartService = cartService;
         Button button = new Button("Убрать 1 единицу");
         button.addClickListener(click -> {
