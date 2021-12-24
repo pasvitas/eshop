@@ -64,13 +64,13 @@ public class CartServiceImpl implements CartService {
                 .map(User::getCartProductIds)
                 .orElse(Map.of())
                 .forEach((key, value) -> {
-                    orderItems.add(productService.getProduct(key)
-                            .map(product -> OrderItem.builder()
+                    productService.getProduct(key)
+                            .ifPresent(product -> orderItems.add(OrderItem.builder()
                                     .itemId(product.getId())
                                     .title(product.getName())
                                     .amount(value)
                                     .price(product.getPrice())
-                                    .build()).get());
+                                    .build()));
 
                 });
         return orderItems;

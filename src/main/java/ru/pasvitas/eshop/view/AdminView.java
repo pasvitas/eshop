@@ -49,6 +49,10 @@ public class AdminView extends AppLayout {
                 .setHeader("Категория");
 
         productGrid
+                .addColumn(Product::getName)
+                .setHeader("Название");
+
+        productGrid
                 .addColumn(Product::getDesc)
                 .setHeader("Описание");
 
