@@ -46,8 +46,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> searchForItem(String category, String title, int page, int size) {
+        return productRepository.findAllByCategoryNameAndNameLike(category, title, PageRequest.of(page, size)).getContent();
+    }
+
+    @Override
     public long countAllProductsForCategoryName(String category) {
         return productRepository.countAllByCategoryName(category);
+    }
+
+    @Override
+    public long countAllProductsForSearchForItem(String category, String title) {
+        return productRepository.countAllByCategoryNameAndNameLike(category, title);
     }
 
     @Cacheable(value = "products", key = "#id")

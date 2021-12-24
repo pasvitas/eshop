@@ -12,7 +12,9 @@ public interface ProductService {
 
     List<String> getCategories();
     List<Product> getAllProductsForCategory(String category, int page, int size);
+    List<Product> searchForItem(String category, String title, int page, int size);
     long countAllProductsForCategoryName(String category);
+    long countAllProductsForSearchForItem(String category, String title);
 
     Optional<Product> getProduct(String id);
 

@@ -5,8 +5,11 @@ import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
@@ -32,6 +35,8 @@ public class ProductsView extends VerticalLayout {
 
     private final List<Grid<Product>> grids = new ArrayList<>();
 
+    private String currentSearch = "";
+
     public ProductsView(ProductService productService, CartService cartService, SecurityChecker securityChecker) {
         this.productService = productService;
 
@@ -53,6 +58,17 @@ public class ProductsView extends VerticalLayout {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         productInfoView.setProduct(null);
         productInfoView.setSizeFull();
+
+
+
+        TextField searchTextField = new TextField("Поиск");
+        searchTextField.addValueChangeListener(value -> {
+            currentSearch = value.getValue();
+            refreshGrids();
+        });
+        add(searchTextField);
+        searchTextField.setWidth("50%");
+
         horizontalLayout.add(accordion);
         horizontalLayout.add(productInfoView);
         add(horizontalLayout);
@@ -80,12 +96,23 @@ public class ProductsView extends VerticalLayout {
                 query -> {
                     int offset = query.getOffset();
                     int limit = query.getLimit();
-
-                    List<Product> products = productService.getAllProductsForCategory(category, offset, limit);
-
+                    List<Product> products;
+                    if (currentSearch.isBlank()) {
+                        products = productService.getAllProductsForCategory(category, offset, limit);
+                    }
+                    else {
+                        products = productService.searchForItem(category, currentSearch, offset, limit);
+                    }
                     return products.stream();
                 },
-                count -> (int) productService.countAllProductsForCategoryName(category)
+                count -> {
+                    if (currentSearch.isBlank()) {
+                        return (int) productService.countAllProductsForCategoryName(category);
+                    }
+                    else {
+                        return (int) productService.countAllProductsForSearchForItem(category, currentSearch);
+                    }
+                }
         ));
 
         productGrid.asSingleSelect().addValueChangeListener(
